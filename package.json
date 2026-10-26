@@ -1,0 +1,152 @@
+{
+  "name": "window-tracker",
+  "displayName": "DataTale Window Tracker",
+  "description": "See every open VS Code window and what its Claude Code session is doing: working, asking you a question, needs input, or done. Click to jump straight to it.",
+  "version": "1.0.0",
+  "publisher": "datatale",
+  "author": {
+    "name": "Warren Dean, DataTale"
+  },
+  "license": "MIT",
+  "icon": "media/logo.png",
+  "galleryBanner": {
+    "color": "#1E1E1E",
+    "theme": "dark"
+  },
+  "homepage": "https://github.com/datatale/window-tracker#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datatale/window-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/datatale/window-tracker/issues"
+  },
+  "keywords": [
+    "claude",
+    "claude code",
+    "ai",
+    "agents",
+    "windows",
+    "multi-window",
+    "status",
+    "power bi",
+    "productivity"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other",
+    "AI"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vsTracker",
+          "title": "Window Tracker",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "vsTracker": [
+        {
+          "type": "webview",
+          "id": "vsTracker.panel",
+          "name": "Windows"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "vsTracker.focus",
+        "title": "Window Tracker: Focus Window"
+      },
+      {
+        "command": "vsTracker.focusNext",
+        "title": "Window Tracker: Go To Next Window Waiting On Me"
+      },
+      {
+        "command": "vsTracker.refresh",
+        "title": "Window Tracker: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "vsTracker.tile",
+        "title": "Window Tracker: Tile All Windows On This Screen",
+        "icon": "$(layout)"
+      },
+      {
+        "command": "vsTracker.stack",
+        "title": "Window Tracker: Stack All Windows On This Screen",
+        "icon": "$(window)"
+      },
+      {
+        "command": "vsTracker.toggleLayout",
+        "title": "Window Tracker: Toggle Tile / Stack"
+      },
+      {
+        "command": "vsTracker.installHooks",
+        "title": "Window Tracker: Install Claude Hooks"
+      },
+      {
+        "command": "vsTracker.uninstallHooks",
+        "title": "Window Tracker: Remove Claude Hooks"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "vsTracker.tile",
+          "when": "view == vsTracker.panel",
+          "group": "navigation@1"
+        },
+        {
+          "command": "vsTracker.stack",
+          "when": "view == vsTracker.panel",
+          "group": "navigation@2"
+        },
+        {
+          "command": "vsTracker.refresh",
+          "when": "view == vsTracker.panel",
+          "group": "navigation@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "vsTracker.focus",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "vsTracker.toggleLayout",
+        "key": "ctrl+alt+l"
+      }
+    ],
+    "configuration": {
+      "title": "DataTale Window Tracker",
+      "properties": {
+        "vsTracker.notify": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a pop-up in the focused window when another window starts waiting on you."
+        },
+        "vsTracker.focusClaudeInput": {
+          "type": "boolean",
+          "default": true,
+          "description": "When you switch to a window from Window Tracker, put the cursor in its Claude Code chat box."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "npx --yes @vscode/vsce package"
+  }
+}

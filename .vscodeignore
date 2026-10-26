@@ -1,0 +1,5 @@
+*.vsix
+.vscode/**
+.gitignore
+PUBLISHING.md
+media/icon-source/**
