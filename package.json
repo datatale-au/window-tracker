@@ -2,7 +2,7 @@
   "name": "window-tracker",
   "displayName": "DataTale Window Tracker",
   "description": "See every open VS Code window and what its Claude Code session is doing: working, asking you a question, needs input, or done. Click to jump straight to it.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "datatale",
   "author": {
     "name": "Warren Dean, DataTale"

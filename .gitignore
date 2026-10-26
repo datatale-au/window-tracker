@@ -1,3 +1,5 @@
 *.vsix
 node_modules/
 .playwright-mcp/
+video/
+media/datatale-128.png

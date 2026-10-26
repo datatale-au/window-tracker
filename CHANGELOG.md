@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Works with VS Code instances started with their own `--user-data-dir`: switching goes to the right instance
+- `VS_TRACKER_HOME` keeps a separate set of tracked windows, e.g. for demos
+
 ## 1.0.0
 
 First public release.

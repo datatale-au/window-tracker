@@ -23,7 +23,8 @@ function ps(extensionPath, script, args, cb) {
 }
 
 function maybeScan(extensionPath) {
-  if (process.platform !== 'win32' || scanning) return;
+  // VS_TRACKER_DEMO leaves docs.json to whatever wrote it (the demo choreographer).
+  if (process.platform !== 'win32' || scanning || process.env.VS_TRACKER_DEMO) return;
   let age = Infinity;
   try { age = Date.now() - fs.statSync(FILE).mtimeMs; } catch {}
   if (age < STALE_MS) return;

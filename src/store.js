@@ -6,7 +6,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const ROOT = path.join(os.homedir(), '.vs-tracker');
+// VS_TRACKER_HOME gives a separate tracker world, e.g. for recording a demo.
+const ROOT = process.env.VS_TRACKER_HOME || path.join(os.homedir(), '.vs-tracker');
 const WINDOWS = path.join(ROOT, 'windows');
 const SESSIONS = path.join(ROOT, 'sessions');
 

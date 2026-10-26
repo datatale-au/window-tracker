@@ -27,9 +27,15 @@ async function focusWindow(win) {
   const cli = findCli();
   log(`focus ${win.name} -> ${target} via ${cli ? cli.exe : 'vscode.openFolder'}`);
   if (cli) {
-    const env = { ...process.env, ELECTRON_RUN_AS_NODE: '1' };
-    delete env.VSCODE_DEV;
-    const child = spawn(cli.exe, [cli.cliJs, target], { env, detached: true, stdio: 'ignore', windowsHide: true });
+    // Drop VS Code's own VSCODE_* variables: inherited IPC handles can point the CLI
+    // at a different VS Code instance than the one named by --user-data-dir.
+    const env = { ELECTRON_RUN_AS_NODE: '1' };
+    for (const [k, v] of Object.entries(process.env)) if (!/^VSCODE_/i.test(k) && k !== 'ELECTRON_RUN_AS_NODE') env[k] = v;
+    // Target the same VS Code instance as the window (it may run with its own --user-data-dir).
+    // Options must come before the folder: the CLI ignores them after the first path.
+    const args = [cli.cliJs, ...(win.userDataDir ? ['--user-data-dir', win.userDataDir] : []), target];
+    log(`cli args: ${args.slice(1).join(' | ')}`);
+    const child = spawn(cli.exe, args, { env, detached: true, stdio: 'ignore', windowsHide: true });
     child.on('error', (e) => { log(`cli error: ${e.message}`); openViaApi(target); });
     child.on('exit', (code) => log(`cli exit ${code}`));
     child.unref();

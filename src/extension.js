@@ -46,6 +46,14 @@ function activate(context) {
   try { hooks.deployHookScript(context.extensionPath); } catch {}
 
   const selfId = vscode.env.sessionId;
+  // Global storage sits at <user-data-dir>/User/globalStorage/<extension id>. VS Code finds
+  // a running instance by an exact match on this path, so restore the upper-case drive
+  // letter it was launched with, and leave it out entirely for the default location.
+  const userDataDir = (() => {
+    const dir = path.resolve(context.globalStorageUri.fsPath, '..', '..', '..').replace(/^[a-z]:/, (d) => d.toUpperCase());
+    const defaultDir = process.env.APPDATA && path.join(process.env.APPDATA, path.basename(dir));
+    return defaultDir && dir.toLowerCase() === defaultDir.toLowerCase() ? null : dir;
+  })();
   const panel = new Panel((msg) => {
     if (msg.type === 'focus') vscode.commands.executeCommand('vsTracker.focus', msg.id);
     else if (msg.type === 'tile') arrange('tile');
@@ -89,6 +97,7 @@ function activate(context) {
       name: vscode.workspace.name || folders[0],
       folders,
       workspaceFile: ws && ws.scheme === 'file' ? ws.fsPath : null,
+      userDataDir,
       pid: process.pid,
     });
   }
@@ -188,13 +197,16 @@ function activate(context) {
 
   heartbeat();
   refresh();
+  // Demo recordings start with the panel showing in every window.
+  // (delayed so it lands after VS Code restores the window's last view).
+  if (process.env.VS_TRACKER_DEMO) setTimeout(demoLayout, 4000);
   const beat = setInterval(heartbeat, store.HEARTBEAT_MS);
   docs.maybeScan(context.extensionPath);
   const tick = setInterval(() => { refresh(); docs.maybeScan(context.extensionPath); }, 5_000); // ages, stale windows, documents
   context.subscriptions.push(
     { dispose: () => { clearInterval(beat); clearInterval(tick); clearTimeout(timer); } },
     vscode.workspace.onDidChangeWorkspaceFolders(heartbeat),
-    vscode.window.onDidChangeWindowState((s) => { if (s.focused) refresh(); }),
+    vscode.window.onDidChangeWindowState((s) => { if (s.focused) { refresh(); if (process.env.VS_TRACKER_DEMO) demoView(); } }),
 
     vscode.commands.registerCommand('vsTracker.focus', async (id) => {
       const w = windows.find((x) => x.id === id);
@@ -244,6 +256,25 @@ function activate(context) {
   }
 
   context.subscriptions.push({ dispose: () => store.removeWindow(selfId) });
+}
+
+// Demo recordings: the choreographer writes 'explorer' or 'tracker' to <state>/demo-view,
+// and a window shows that side bar view whenever it comes to the front.
+function demoView() {
+  let view = 'tracker';
+  try { view = fs.readFileSync(path.join(store.ROOT, 'demo-view'), 'utf8').trim(); } catch {}
+  vscode.commands.executeCommand(view === 'explorer' ? 'workbench.view.explorer' : 'workbench.view.extension.vsTracker');
+}
+
+// Recording layout: no secondary side bar, the panel showing, and a wider side bar.
+// With the editor focused, decreaseViewWidth shrinks the editor, so the side bar grows.
+async function demoLayout() {
+  const run = (c) => vscode.commands.executeCommand(c).then(undefined, () => {});
+  await run('workbench.action.closeAuxiliaryBar');
+  await run('workbench.view.extension.vsTracker');
+  await run('workbench.action.focusActiveEditorGroup');
+  const steps = Number(process.env.VS_TRACKER_DEMO_WIDEN || 3);
+  for (let i = 0; i < steps; i++) await run('workbench.action.decreaseViewWidth');
 }
 
 function deactivate() {}

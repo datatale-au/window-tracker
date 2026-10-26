@@ -4,3 +4,6 @@
 PUBLISHING.md
 media/icon-source/**
 .playwright-mcp/**
+demo/**
+video/**
+media/datatale-128.png

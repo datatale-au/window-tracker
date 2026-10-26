@@ -7,7 +7,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const SESSIONS = path.join(os.homedir(), '.vs-tracker', 'sessions');
+const SESSIONS = path.join(process.env.VS_TRACKER_HOME || path.join(os.homedir(), '.vs-tracker'), 'sessions');
 const BACKGROUND_EXPIRE_MS = 12 * 60 * 60_000;
 
 function stateFor(input) {
