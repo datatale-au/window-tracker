@@ -3,3 +3,4 @@
 .gitignore
 PUBLISHING.md
 media/icon-source/**
+.playwright-mcp/**

@@ -4,9 +4,9 @@ Each step that needs your sign-in is marked **You**. Claude can do the rest once
 
 ## 1. GitHub (the source code)
 
-1. **You:** sign in to GitHub as the DataTale account (warren.dean@datatale.com.au). Create a free organisation called **datatale** at <https://github.com/organizations/plan>. If that name is taken, pick another and tell Claude, so it can update the links in `package.json`.
+1. **You:** sign in to GitHub as the DataTale account (warren.dean@datatale.com.au). Create a free organisation called **datatale-au** at <https://github.com/organizations/plan>. If that name is taken, pick another and tell Claude, so it can update the links in `package.json`.
 2. **You:** in a terminal, run `gh auth login`. Choose GitHub.com, then HTTPS, then log in with a web browser, using the DataTale account.
-3. **Claude:** creates the public repo `datatale/window-tracker` and pushes the code (`gh repo create datatale/window-tracker --public --source . --push`).
+3. **Claude:** creates the public repo `datatale-au/window-tracker` and pushes the code (`gh repo create datatale-au/window-tracker --public --source . --push`).
 
 The repo has to be public before step 2, because the store page loads the screenshot from it.
 

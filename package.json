@@ -13,13 +13,13 @@
     "color": "#1E1E1E",
     "theme": "dark"
   },
-  "homepage": "https://github.com/datatale/window-tracker#readme",
+  "homepage": "https://github.com/datatale-au/window-tracker#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/datatale/window-tracker.git"
+    "url": "https://github.com/datatale-au/window-tracker.git"
   },
   "bugs": {
-    "url": "https://github.com/datatale/window-tracker/issues"
+    "url": "https://github.com/datatale-au/window-tracker/issues"
   },
   "keywords": [
     "claude",
